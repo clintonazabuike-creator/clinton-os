@@ -3,148 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLINTON_OS | Platform</title>
+    <title>CLINTON_OS | Pro</title>
     <style>
-        :root { --accent: #00D2FF; --bg: #000; --taskbar: rgba(15, 15, 15, 0.9); --glass: rgba(255, 255, 255, 0.1); }
+        :root { --accent: #00D2FF; --bg: #000; --taskbar: rgba(10, 10, 10, 0.9); --glass: rgba(255, 255, 255, 0.05); }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Inter', sans-serif; overflow: hidden; color: white; }
         
-        #desktop { width: 100%; height: calc(100% - 50px); position: relative; background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2072') center/cover; }
+        /* Dynamic Desktop */
+        #desktop { width: 100%; height: calc(100% - 50px); position: relative; background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop') center/cover; transition: 0.5s; }
 
-        #taskbar { height: 50px; width: 100%; background: var(--taskbar); backdrop-filter: blur(15px); position: absolute; bottom: 0; display: flex; align-items: center; padding: 0 15px; border-top: 1px solid #333; z-index: 1000; }
+        /* Taskbar & Navigation */
+        #taskbar { height: 50px; width: 100%; background: var(--taskbar); backdrop-filter: blur(20px); position: absolute; bottom: 0; display: flex; align-items: center; padding: 0 15px; border-top: 1px solid #333; z-index: 1000; }
         
-        .start-btn { font-weight: 900; color: var(--accent); cursor: pointer; margin-right: 15px; border: 1px solid var(--accent); padding: 5px 10px; border-radius: 5px; font-size: 12px; }
-        .task-tray { display: flex; gap: 10px; }
-        .task-icon { width: 32px; height: 32px; background: var(--glass); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; border: 1px solid #444; }
-        .task-icon:hover { border-color: var(--accent); background: rgba(0, 210, 255, 0.2); }
+        .start-trigger { background: var(--accent); color: #000; font-weight: 900; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; transition: 0.3s; }
+        .start-trigger:hover { box-shadow: 0 0 15px var(--accent); }
 
-        /* Window System */
-        .window { position: absolute; width: 450px; height: 550px; background: #000; border: 1px solid #444; border-radius: 12px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); display: flex; flex-direction: column; overflow: hidden; }
-        .window-header { background: #1a1a1a; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #333; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
-        .window-content { flex-grow: 1; border: none; width: 100%; height: 100%; background: #fff; }
-        .close-btn { width: 12px; height: 12px; background: #ff5f56; border-radius: 50%; cursor: pointer; }
+        /* Start Menu (The App Store Drop-down) */
+        #start-menu { position: absolute; bottom: 60px; left: 10px; width: 280px; background: rgba(15, 15, 15, 0.95); border: 1px solid #333; border-radius: 15px; backdrop-filter: blur(20px); display: none; flex-direction: column; padding: 15px; z-index: 1001; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* App Store Interface */
-        .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; background: #111; height: 100%; overflow-y: auto; }
-        .store-item { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 10px; text-align: center; }
-        .store-item h4 { margin: 10px 0 5px 0; font-size: 14px; }
-        .install-btn { background: var(--accent); color: #000; border: none; padding: 5px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px; }
+        .menu-category { font-size: 10px; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; margin-top: 10px; }
+        .app-link { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .app-link:hover { background: rgba(255,255,255,0.1); }
 
-        .sys-info { margin-left: auto; font-size: 12px; opacity: 0.6; display: flex; gap: 15px; }
+        /* Window Styling */
+        .window { position: absolute; width: 450px; height: 500px; background: #000; border: 1px solid #444; border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); display: flex; flex-direction: column; overflow: hidden; animation: pop 0.2s ease; }
+        @keyframes pop { from { transform: scale(0.95); } to { transform: scale(1); } }
+        .window-header { background: #1a1a1a; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; }
+        .window-content { flex-grow: 1; border: none; background: #fff; }
+        
+        .sys-tray { margin-left: auto; display: flex; gap: 20px; font-size: 12px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-<div id="desktop">
-    <div id="win-store" class="window" style="top: 50px; left: 50px; z-index: 10;">
-        <div class="window-header" onmousedown="dragElement(this.parentElement)">
-            <span>CREATOR_STORE</span>
-            <div class="close-btn" onclick="this.parentElement.parentElement.style.display='none'"></div>
-        </div>
-        <div class="store-grid">
-            <div class="store-item">
-                <div style="font-size: 24px;">📊</div>
-                <h4>Delta Finance</h4>
-                <button class="install-btn" onclick="launchApp('Delta Finance', 'delta-finance', '📊')">INSTALL</button>
-            </div>
-            <div class="store-item">
-                <div style="font-size: 24px;">📦</div>
-                <h4>P2P Market</h4>
-                <button class="install-btn" onclick="launchApp('P2P Market', 'p2p-market', '📦')">INSTALL</button>
-            </div>
-            <div class="store-item">
-                <div style="font-size: 24px;">👻</div>
-                <h4>Ghost Chat</h4>
-                <button class="install-btn" onclick="launchApp('Ghost Chat', 'ghost-chat', '👻')">INSTALL</button>
-            </div>
-            <div class="store-item">
-                <div style="font-size: 24px;">🌌</div>
-                <h4>The Void</h4>
-                <button class="install-btn" onclick="launchApp('The Void', 'the-void', '🌌')">INSTALL</button>
-            </div>
-            <div class="store-item">
-                <div style="font-size: 24px;">🗝️</div>
-                <h4>Final Key</h4>
-                <button class="install-btn" onclick="launchApp('Final Key', 'final-key', '🗝️')">INSTALL</button>
-            </div>
-            <div class="store-item">
-                <div style="font-size: 24px;">😊</div>
-                <h4>Open Smile</h4>
-                <button class="install-btn" onclick="launchApp('Open Smile', 'open-smile', '😊')">INSTALL</button>
-            </div>
-        </div>
-    </div>
+<div id="desktop"></div>
+
+<div id="start-menu">
+    <div class="menu-category">SYSTEM APPLICATIONS</div>
+    <div class="app-link" onclick="launchApp('Global Pulse', 'global-pulse', '📡')"><span>📡</span> Global Pulse</div>
+    <div class="app-link" onclick="launchApp('Delta Finance', 'delta-finance', '📊')"><span>📊</span> Delta Finance</div>
+    
+    <div class="menu-category">CREATIVE SUITE</div>
+    <div class="app-link" onclick="launchApp('The Void', 'the-void', '🌌')"><span>🌌</span> The Void</div>
+    <div class="app-link" onclick="launchApp('Ghost Chat', 'ghost-chat', '👻')"><span>👻</span> Ghost Chat</div>
+    <div class="app-link" onclick="launchApp('Open Smile', 'open-smile', '😊')"><span>😊</span> Open Smile</div>
+
+    <div class="menu-category">SETTINGS</div>
+    <div class="app-link" onclick="changeWallpaper()"><span>🖼️</span> Change Wallpaper</div>
 </div>
 
 <div id="taskbar">
-    <div class="start-btn" onclick="document.getElementById('win-store').style.display='flex'">START</div>
-    <div class="task-tray" id="task-tray">
-        <div class="task-icon" onclick="document.getElementById('win-store').style.display='flex'">🏪</div>
-    </div>
+    <div class="start-trigger" onclick="toggleStart()">START_MENU</div>
+    <div id="task-icons" style="display: flex; gap: 10px; margin-left: 15px;"></div>
     
-    <div class="sys-info">
+    <div class="sys-tray">
+        <span id="cpu-load">CPU: 2%</span>
         <span id="clock">00:00</span>
-        <span>OS_v2.0</span>
     </div>
 </div>
 
 <script>
-    const username = "clintonazabuike-creator"; // YOUR GITHUB USERNAME
+    const user = "clintonazabuike-creator";
+
+    function toggleStart() {
+        const menu = document.getElementById('start-menu');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
 
     function launchApp(name, repo, icon) {
+        toggleStart();
         const id = 'win-' + repo;
-        if(document.getElementById(id)) {
-            document.getElementById(id).style.display = 'flex';
-            return;
-        }
+        if(document.getElementById(id)) return;
 
-        // 1. Create Window
+        // Create Window
         const win = document.createElement('div');
-        win.id = id;
-        win.className = 'window';
-        win.style.top = (100 + Math.random()*50) + "px";
-        win.style.left = (100 + Math.random()*50) + "px";
+        win.id = id; win.className = 'window';
+        win.style.top = "50px"; win.style.left = "50px";
         win.innerHTML = `
             <div class="window-header" onmousedown="dragElement(this.parentElement)">
-                <span>${name.toUpperCase()}</span>
-                <div class="close-btn" onclick="document.getElementById('${id}').style.display='none'"></div>
+                <span>${name}</span>
+                <span style="color:red; cursor:pointer;" onclick="this.parentElement.parentElement.remove(); document.getElementById('icon-${repo}').remove()">●</span>
             </div>
-            <iframe class="window-content" src="https://${username}.github.io/${repo}/"></iframe>
+            <iframe class="window-content" src="https://${user}.github.io/${repo}/"></iframe>
         `;
         document.getElementById('desktop').appendChild(win);
 
-        // 2. Add Taskbar Icon
-        const trayIcon = document.createElement('div');
-        trayIcon.className = 'task-icon';
-        trayIcon.innerHTML = icon;
-        trayIcon.onclick = () => {
+        // Add Task Icon
+        const tIcon = document.createElement('div');
+        tIcon.id = 'icon-' + repo;
+        tIcon.innerHTML = icon;
+        tIcon.style.cssText = "cursor:pointer; font-size:20px; padding: 5px; background:rgba(255,255,255,0.1); border-radius:5px;";
+        tIcon.onclick = () => {
             const w = document.getElementById(id);
             w.style.display = w.style.display === 'none' ? 'flex' : 'none';
         };
-        document.getElementById('task-tray').appendChild(trayIcon);
+        document.getElementById('task-icons').appendChild(tIcon);
     }
 
-    // CLOCK
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }, 1000);
+    function changeWallpaper() {
+        const walls = [
+            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072',
+            'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964',
+            'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070'
+        ];
+        const randomWall = walls[Math.floor(Math.random() * walls.length)];
+        document.getElementById('desktop').style.backgroundImage = `url('${randomWall}')`;
+        toggleStart();
+    }
 
-    // DRAG LOGIC
+    // Drag & Clock Logic
     function dragElement(elmnt) {
-        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        var p1=0, p2=0, p3=0, p4=0;
         elmnt.onmousedown = (e) => {
-            e.preventDefault();
-            pos3 = e.clientX; pos4 = e.clientY;
+            p3=e.clientX; p4=e.clientY;
             document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
             document.onmousemove = (e) => {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
-                pos3 = e.clientX; pos4 = e.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                p1=p3-e.clientX; p2=p4-e.clientY; p3=e.clientX; p4=e.clientY;
+                elmnt.style.top = (elmnt.offsetTop - p2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - p1) + "px";
             };
         };
     }
+    setInterval(() => {
+        document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('cpu-load').innerText = `CPU: ${Math.floor(Math.random() * 5) + 1}%`;
+    }, 1000);
 </script>
-
 </body>
 </html>
