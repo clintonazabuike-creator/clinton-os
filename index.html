@@ -3,96 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLINTON_OS | Decentralized System</title>
+    <title>CLINTON_OS | Platform</title>
     <style>
-        :root { --accent: #00D2FF; --bg: #000; --taskbar: rgba(20, 20, 20, 0.8); }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #050505; font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; }
+        :root { --accent: #00D2FF; --bg: #000; --taskbar: rgba(15, 15, 15, 0.9); --glass: rgba(255, 255, 255, 0.1); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Inter', sans-serif; overflow: hidden; color: white; }
         
-        /* Desktop Background */
-        #desktop { width: 100%; height: calc(100% - 50px); position: relative; background: radial-gradient(circle at center, #111 0%, #000 100%); }
+        #desktop { width: 100%; height: calc(100% - 50px); position: relative; background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2072') center/cover; }
 
-        /* Taskbar */
-        #taskbar { height: 50px; width: 100%; background: var(--taskbar); backdrop-filter: blur(10px); position: absolute; bottom: 0; display: flex; align-items: center; padding: 0 20px; box-sizing: border-box; border-top: 1px solid #222; z-index: 1000; }
+        #taskbar { height: 50px; width: 100%; background: var(--taskbar); backdrop-filter: blur(15px); position: absolute; bottom: 0; display: flex; align-items: center; padding: 0 15px; border-top: 1px solid #333; z-index: 1000; }
         
-        .start-btn { font-weight: 900; color: var(--accent); cursor: pointer; margin-right: 20px; letter-spacing: 2px; }
-        .task-icon { width: 35px; height: 35px; background: #222; border-radius: 8px; margin: 0 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s; }
-        .task-icon:hover { background: var(--accent); color: #000; }
+        .start-btn { font-weight: 900; color: var(--accent); cursor: pointer; margin-right: 15px; border: 1px solid var(--accent); padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+        .task-tray { display: flex; gap: 10px; }
+        .task-icon { width: 32px; height: 32px; background: var(--glass); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; border: 1px solid #444; }
+        .task-icon:hover { border-color: var(--accent); background: rgba(0, 210, 255, 0.2); }
 
         /* Window System */
-        .window { position: absolute; width: 400px; height: 500px; background: #111; border: 1px solid #333; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; overflow: hidden; resize: both; }
-        .window-header { background: #222; padding: 10px; display: flex; justify-content: space-between; align-items: center; cursor: move; }
-        .window-content { flex-grow: 1; border: none; background: white; }
-        .close-btn { color: #ff5f56; cursor: pointer; font-weight: bold; }
+        .window { position: absolute; width: 450px; height: 550px; background: #000; border: 1px solid #444; border-radius: 12px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); display: flex; flex-direction: column; overflow: hidden; }
+        .window-header { background: #1a1a1a; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #333; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        .window-content { flex-grow: 1; border: none; width: 100%; height: 100%; background: #fff; }
+        .close-btn { width: 12px; height: 12px; background: #ff5f56; border-radius: 50%; cursor: pointer; }
 
-        .system-time { margin-left: auto; font-family: monospace; font-size: 14px; opacity: 0.7; }
+        /* App Store Interface */
+        .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; background: #111; height: 100%; overflow-y: auto; }
+        .store-item { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 10px; text-align: center; }
+        .store-item h4 { margin: 10px 0 5px 0; font-size: 14px; }
+        .install-btn { background: var(--accent); color: #000; border: none; padding: 5px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px; }
+
+        .sys-info { margin-left: auto; font-size: 12px; opacity: 0.6; display: flex; gap: 15px; }
     </style>
 </head>
 <body>
 
 <div id="desktop">
-    <div id="win-p2p" class="window" style="top: 50px; left: 50px;">
+    <div id="win-store" class="window" style="top: 50px; left: 50px; z-index: 10;">
         <div class="window-header" onmousedown="dragElement(this.parentElement)">
-            <span>P2P MERCHANT</span>
-            <span class="close-btn" onclick="closeWin('win-p2p')">●</span>
+            <span>CREATOR_STORE</span>
+            <div class="close-btn" onclick="this.parentElement.parentElement.style.display='none'"></div>
         </div>
-        <iframe class="window-content" src="https://clintonazabuike-creator.github.io/p2p-market/"></iframe>
-    </div>
-
-    <div id="win-finance" class="window" style="top: 100px; left: 100px;">
-        <div class="window-header" onmousedown="dragElement(this.parentElement)">
-            <span>DELTA FINANCE</span>
-            <span class="close-btn" onclick="closeWin('win-finance')">●</span>
+        <div class="store-grid">
+            <div class="store-item">
+                <div style="font-size: 24px;">📊</div>
+                <h4>Delta Finance</h4>
+                <button class="install-btn" onclick="launchApp('Delta Finance', 'delta-finance', '📊')">INSTALL</button>
+            </div>
+            <div class="store-item">
+                <div style="font-size: 24px;">📦</div>
+                <h4>P2P Market</h4>
+                <button class="install-btn" onclick="launchApp('P2P Market', 'p2p-market', '📦')">INSTALL</button>
+            </div>
+            <div class="store-item">
+                <div style="font-size: 24px;">👻</div>
+                <h4>Ghost Chat</h4>
+                <button class="install-btn" onclick="launchApp('Ghost Chat', 'ghost-chat', '👻')">INSTALL</button>
+            </div>
+            <div class="store-item">
+                <div style="font-size: 24px;">🌌</div>
+                <h4>The Void</h4>
+                <button class="install-btn" onclick="launchApp('The Void', 'the-void', '🌌')">INSTALL</button>
+            </div>
+            <div class="store-item">
+                <div style="font-size: 24px;">🗝️</div>
+                <h4>Final Key</h4>
+                <button class="install-btn" onclick="launchApp('Final Key', 'final-key', '🗝️')">INSTALL</button>
+            </div>
+            <div class="store-item">
+                <div style="font-size: 24px;">😊</div>
+                <h4>Open Smile</h4>
+                <button class="install-btn" onclick="launchApp('Open Smile', 'open-smile', '😊')">INSTALL</button>
+            </div>
         </div>
-        <iframe class="window-content" src="https://clintonazabuike-creator.github.io/delta-finance/"></iframe>
     </div>
 </div>
 
 <div id="taskbar">
-    <div class="start-btn">CLINTON_OS</div>
-    <div class="task-icon" onclick="openWin('win-p2p')">📦</div>
-    <div class="task-icon" onclick="openWin('win-finance')">📊</div>
-    <div class="task-icon" onclick="alert('Coming soon: Tracking the Global Pulse...')">📡</div>
+    <div class="start-btn" onclick="document.getElementById('win-store').style.display='flex'">START</div>
+    <div class="task-tray" id="task-tray">
+        <div class="task-icon" onclick="document.getElementById('win-store').style.display='flex'">🏪</div>
+    </div>
     
-    <div class="system-time" id="clock">00:00:00</div>
+    <div class="sys-info">
+        <span id="clock">00:00</span>
+        <span>OS_v2.0</span>
+    </div>
 </div>
 
 <script>
-    function openWin(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeWin(id) { document.getElementById(id).style.display = 'none'; }
+    const username = "clintonazabuike-creator"; // YOUR GITHUB USERNAME
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString();
+    function launchApp(name, repo, icon) {
+        const id = 'win-' + repo;
+        if(document.getElementById(id)) {
+            document.getElementById(id).style.display = 'flex';
+            return;
+        }
+
+        // 1. Create Window
+        const win = document.createElement('div');
+        win.id = id;
+        win.className = 'window';
+        win.style.top = (100 + Math.random()*50) + "px";
+        win.style.left = (100 + Math.random()*50) + "px";
+        win.innerHTML = `
+            <div class="window-header" onmousedown="dragElement(this.parentElement)">
+                <span>${name.toUpperCase()}</span>
+                <div class="close-btn" onclick="document.getElementById('${id}').style.display='none'"></div>
+            </div>
+            <iframe class="window-content" src="https://${username}.github.io/${repo}/"></iframe>
+        `;
+        document.getElementById('desktop').appendChild(win);
+
+        // 2. Add Taskbar Icon
+        const trayIcon = document.createElement('div');
+        trayIcon.className = 'task-icon';
+        trayIcon.innerHTML = icon;
+        trayIcon.onclick = () => {
+            const w = document.getElementById(id);
+            w.style.display = w.style.display === 'none' ? 'flex' : 'none';
+        };
+        document.getElementById('task-tray').appendChild(trayIcon);
     }
-    setInterval(updateClock, 1000);
 
-    // Basic Drag System
+    // CLOCK
+    setInterval(() => {
+        document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
+
+    // DRAG LOGIC
     function dragElement(elmnt) {
         var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        elmnt.onmousedown = dragMouseDown;
-
-        function dragMouseDown(e) {
+        elmnt.onmousedown = (e) => {
             e.preventDefault();
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-        }
-
-        function elementDrag(e) {
-            e.preventDefault();
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-        }
-
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-        }
+            pos3 = e.clientX; pos4 = e.clientY;
+            document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
+            document.onmousemove = (e) => {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
+                pos3 = e.clientX; pos4 = e.clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            };
+        };
     }
 </script>
 
