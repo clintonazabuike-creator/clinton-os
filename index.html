@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLINTON_OS | Decentralized System</title>
+    <style>
+        :root { --accent: #00D2FF; --bg: #000; --taskbar: rgba(20, 20, 20, 0.8); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #050505; font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; }
+        
+        /* Desktop Background */
+        #desktop { width: 100%; height: calc(100% - 50px); position: relative; background: radial-gradient(circle at center, #111 0%, #000 100%); }
+
+        /* Taskbar */
+        #taskbar { height: 50px; width: 100%; background: var(--taskbar); backdrop-filter: blur(10px); position: absolute; bottom: 0; display: flex; align-items: center; padding: 0 20px; box-sizing: border-box; border-top: 1px solid #222; z-index: 1000; }
+        
+        .start-btn { font-weight: 900; color: var(--accent); cursor: pointer; margin-right: 20px; letter-spacing: 2px; }
+        .task-icon { width: 35px; height: 35px; background: #222; border-radius: 8px; margin: 0 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s; }
+        .task-icon:hover { background: var(--accent); color: #000; }
+
+        /* Window System */
+        .window { position: absolute; width: 400px; height: 500px; background: #111; border: 1px solid #333; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; overflow: hidden; resize: both; }
+        .window-header { background: #222; padding: 10px; display: flex; justify-content: space-between; align-items: center; cursor: move; }
+        .window-content { flex-grow: 1; border: none; background: white; }
+        .close-btn { color: #ff5f56; cursor: pointer; font-weight: bold; }
+
+        .system-time { margin-left: auto; font-family: monospace; font-size: 14px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div id="desktop">
+    <div id="win-p2p" class="window" style="top: 50px; left: 50px;">
+        <div class="window-header" onmousedown="dragElement(this.parentElement)">
+            <span>P2P MERCHANT</span>
+            <span class="close-btn" onclick="closeWin('win-p2p')">●</span>
+        </div>
+        <iframe class="window-content" src="https://clintonazabuike-creator.github.io/p2p-market/"></iframe>
+    </div>
+
+    <div id="win-finance" class="window" style="top: 100px; left: 100px;">
+        <div class="window-header" onmousedown="dragElement(this.parentElement)">
+            <span>DELTA FINANCE</span>
+            <span class="close-btn" onclick="closeWin('win-finance')">●</span>
+        </div>
+        <iframe class="window-content" src="https://clintonazabuike-creator.github.io/delta-finance/"></iframe>
+    </div>
+</div>
+
+<div id="taskbar">
+    <div class="start-btn">CLINTON_OS</div>
+    <div class="task-icon" onclick="openWin('win-p2p')">📦</div>
+    <div class="task-icon" onclick="openWin('win-finance')">📊</div>
+    <div class="task-icon" onclick="alert('Coming soon: Tracking the Global Pulse...')">📡</div>
+    
+    <div class="system-time" id="clock">00:00:00</div>
+</div>
+
+<script>
+    function openWin(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeWin(id) { document.getElementById(id).style.display = 'none'; }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+
+    // Basic Drag System
+    function dragElement(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        elmnt.onmousedown = dragMouseDown;
+
+        function dragMouseDown(e) {
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+</script>
+
+</body>
+</html>
